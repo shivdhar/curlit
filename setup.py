@@ -10,7 +10,7 @@ setup(
     name='curlit',
     version='0.1',
     packages=['curlit'],
-    url='',
+    url='https://github.com/shivdhar/curlit',
     license='MIT',
     author='Shiv Dhar',
     author_email='shiv.dhar@gmail.com',
