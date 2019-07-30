@@ -1,1 +1,1 @@
-from .requests import get
+from .requests import get, post

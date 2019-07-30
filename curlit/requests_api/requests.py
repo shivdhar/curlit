@@ -6,6 +6,7 @@ import pycurl
 
 def make_request(url,
                  method,
+                 params=None,
                  headers=None,
                  files=None,
                  cookies=None,
@@ -13,9 +14,13 @@ def make_request(url,
     buf = BytesIO()
 
     handle = pycurl.Curl()
+    handle.setopt(pycurl.WRITEDATA, buf)
+
+    if params is not None:
+        assert isinstance(params, dict)
+        url = f'{url}?{urlencode(params)}'
 
     handle.setopt(pycurl.URL, url)
-    handle.setopt(pycurl.WRITEDATA, buf)
 
     if headers is not None:
         assert isinstance(headers, dict)
@@ -45,11 +50,11 @@ def make_request(url,
     return body
 
 
-def get(*args, **kwargs):
+def get(url, *args, **kwargs):
     method = 'GET'
-    return make_request(method, *args, **kwargs)
+    return make_request(url, method, *args, **kwargs)
 
 
-def post(*args, **kwargs):
+def post(url, *args, **kwargs):
     method = 'POST'
-    return make_request(method, *args, **kwargs)
+    return make_request(url, method, *args, **kwargs)
