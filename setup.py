@@ -5,6 +5,8 @@ from setuptools import setup
 reqs_file = Path('requirements.in')
 reqs = reqs_file.read_text().splitlines()
 
+dev_reqs_file = Path('requirements-dev.in')
+dev_reqs = dev_reqs_file.read_text().splitlines()
 
 setup(
     name='curlit',
@@ -17,4 +19,7 @@ setup(
     description='Curl your HTTP!',
 
     install_requires=reqs,
+    extras_require={
+        'dev': dev_reqs,
+    }
 )
