@@ -1,15 +1,9 @@
 from io import BytesIO
 from urllib.parse import urlencode
-from icecream import ic
 
 import pycurl
 
-info_fields = {
-    'effective_url': pycurl.EFFECTIVE_URL,
-    'response_code': pycurl.RESPONSE_CODE,
-    'http_connectcode': pycurl.HTTP_CONNECTCODE,
-    'http_version':  pycurl.INFO_HTTP_VERSION,
-}
+from .response import Response
 
 
 def make_request(url,
@@ -19,9 +13,11 @@ def make_request(url,
                  files=None,
                  cookies=None,
                  body=None):
-    buf = BytesIO()
+    body_buf = BytesIO()
+    header_buf = BytesIO()
     handle = pycurl.Curl()
-    handle.setopt(pycurl.WRITEDATA, buf)
+    handle.setopt(pycurl.HEADERFUNCTION, header_buf.write)
+    handle.setopt(pycurl.WRITEDATA, body_buf)
 
     if params is not None:
         assert isinstance(params, dict)
@@ -52,9 +48,9 @@ def make_request(url,
 
     handle.perform()
 
-    body = buf.getvalue().decode('iso-8859-1')
+    body = body_buf.getvalue().decode('iso-8859-1')
 
-    return Response(handle, buf)
+    return Response(handle, header_buf, body_buf)
 
 
 def get(url, *args, **kwargs):
@@ -65,23 +61,3 @@ def get(url, *args, **kwargs):
 def post(url, *args, **kwargs):
     method = 'POST'
     return make_request(url, method, *args, **kwargs)
-
-
-class Response:
-    def __init__(self, handle, content):
-        self.handle = handle
-        self.content = content
-
-        self.info = self.make_info()
-        self.status = self.info['response_code']
-
-        self.ok = False
-        if self.status in range(200, 300):
-            self.ok = True
-
-    def make_info(self):
-        handle = self.handle
-        info_dict = {}
-        for k, v in info_fields.items():
-            info_dict[k] = handle.getinfo(v)
-        return info_dict

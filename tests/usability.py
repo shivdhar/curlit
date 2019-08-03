@@ -7,3 +7,4 @@ ic(response.__dict__)
 response = curlit.post(url, params={'sudgsid': 'oiwefowefw'},
                    files={'b': 'usability.py'},
                    cookies={'a': 'b', 'time-remaining': 100})
+ic(response.__dict__)
