@@ -1,3 +1,4 @@
+import json as jsonlib
 import pycurl
 
 info_fields = {
@@ -13,8 +14,7 @@ class Response:
         self.handle = handle
         self._header_buf = header_buf
         self.headers = self._make_headers_dict()
-        self.content = body_buf
-        self.string = self.content.getvalue().decode('iso-8859-1')
+        self.body = body_buf.getvalue()
 
         self.info = self._make_info()
         self.status = self.info['response_code']
@@ -23,9 +23,22 @@ class Response:
         if self.status in range(200, 300):
             self.ok = True
 
+        self.text = None
+        try:
+            self.text = self.body.decode()
+        except UnicodeDecodeError:
+            pass
+
+        self.json = None
+        try:
+            self.json = jsonlib.loads(self.text)
+        except jsonlib.JSONDecodeError:
+            pass
+
     def _make_headers_dict(self):
         header_str = self._header_buf.getvalue().decode('utf-8')
-
+        from icecream import ic
+        ic(header_str)
         header_list = header_str.strip().splitlines()
         headers = {}
         for i, line in enumerate(header_list):
