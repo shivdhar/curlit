@@ -13,6 +13,7 @@ pycurl = "^7"
 icecream = "^2"
 pytest = "^7.2"
 requests = "^2"
+black = "^23.1.0"
 
 [build-system]
 requires = ["poetry>=0.12"]
