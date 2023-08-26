@@ -6,12 +6,12 @@ authors = ["Shiv Dhar <shivdhar@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = ">=3.6,<3.12"
+python = "^3.7"
 pycurl = "^7"
 
 [tool.poetry.group.dev.dependencies]
 icecream = "^2"
-pytest = "^7"
+pytest = "^7.2"
 requests = "^2"
 
 [build-system]
