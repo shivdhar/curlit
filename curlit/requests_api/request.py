@@ -8,15 +8,18 @@ from .response import Response
 
 
 class Request:
-    def __init__(self, url,
-                 method,
-                 params=None,
-                 headers=None,
-                 files=None,
-                 cookies=None,
-                 body=None,
-                 json=None,
-                 encoding='utf-8'):
+    def __init__(
+        self,
+        url,
+        method,
+        params=None,
+        headers=None,
+        files=None,
+        cookies=None,
+        body=None,
+        json=None,
+        encoding="utf-8",
+    ):
         self.url = url
         self.method = method
         self.response = None
@@ -44,7 +47,7 @@ class Request:
         # set headers
         if headers is not None:
             assert isinstance(headers, dict)
-            headers = [f'{k}: {v}' for k, v in headers.items()]
+            headers = [f"{k}: {v}" for k, v in headers.items()]
             self._handle.setopt(pycurl.HTTPHEADER, headers)
 
         # set files
@@ -56,7 +59,7 @@ class Request:
         # set cookies
         if cookies is not None:
             assert isinstance(cookies, dict)
-            cookies = '; '.join((f'{k}={v}' for k, v in cookies.items()))
+            cookies = "; ".join((f"{k}={v}" for k, v in cookies.items()))
             self._handle.setopt(pycurl.COOKIE, cookies)
 
         # set body
@@ -66,31 +69,40 @@ class Request:
 
         # set json in body
         if json is not None:
-            self._handle.setopt(pycurl.POSTFIELDS, jsonlib.dumps(json).encode(encoding=encoding))
+            self._handle.setopt(
+                pycurl.POSTFIELDS, jsonlib.dumps(json).encode(encoding=encoding)
+            )
         self._handle.setopt(pycurl.CUSTOMREQUEST, method)
 
-    def perform(self):
+    def perform(self, debug=False):
+        if debug:
+            self._handle.setopt(pycurl.VERBOSE, True)
+
         self._handle.perform()
+
         self.body_raw = self._body_buf.getvalue()
         self.headers_raw = self._header_buf.getvalue()
+
         return Response(self._handle, self._header_buf, self._body_buf)
 
 
 def make_full_url(url, params):
     assert isinstance(params, dict)
-    full_url = f'{url}?{urlencode(params)}'
+    full_url = f"{url}?{urlencode(params)}"
     return full_url
 
 
-def make_request(url,
-                 method,
-                 params=None,
-                 headers=None,
-                 files=None,
-                 cookies=None,
-                 body=None,
-                 json=None,
-                 encoding='utf-8'):
+def make_request(
+    url,
+    method,
+    params=None,
+    headers=None,
+    files=None,
+    cookies=None,
+    body=None,
+    json=None,
+    encoding="utf-8",
+):
     body_buf = BytesIO()
     header_buf = BytesIO()
     handle = pycurl.Curl()
@@ -99,13 +111,13 @@ def make_request(url,
 
     if params is not None:
         assert isinstance(params, dict)
-        url = f'{url}?{urlencode(params)}'
+        url = f"{url}?{urlencode(params)}"
 
     handle.setopt(pycurl.URL, url)
 
     if headers is not None:
         assert isinstance(headers, dict)
-        headers = [f'{k}: {v}' for k, v in headers.items()]
+        headers = [f"{k}: {v}" for k, v in headers.items()]
         handle.setopt(pycurl.HTTPHEADER, headers)
 
     if files is not None:
@@ -115,7 +127,7 @@ def make_request(url,
 
     if cookies is not None:
         assert isinstance(cookies, dict)
-        cookies = '; '.join((f'{k}={v}' for k, v in cookies.items()))
+        cookies = "; ".join((f"{k}={v}" for k, v in cookies.items()))
         handle.setopt(pycurl.COOKIE, cookies)
 
     if body is not None:
@@ -128,6 +140,6 @@ def make_request(url,
 
     handle.perform()
 
-    body = body_buf.getvalue().decode('iso-8859-1')
+    body = body_buf.getvalue().decode("iso-8859-1")
 
     return Response(handle, header_buf, body_buf)
