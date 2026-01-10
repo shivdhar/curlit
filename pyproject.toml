@@ -1,20 +1,17 @@
-[tool.poetry]
+[project]
 name = "curlit"
 version = "0.1.0"
 description = "Curl your HTTP!"
-authors = ["Shiv Dhar <shivdhar@gmail.com>"]
+authors = [{ name = "Shiv Dhar", email = "shivdhar@gmail.com" }]
+requires-python = ">=3.9,<4"
 license = "MIT"
+dependencies = ["pycurl>=7,<8"]
 
-[tool.poetry.dependencies]
-python = "^3.8"
-pycurl = "^7"
+[dependency-groups]
+dev = [
+    "icecream>=2,<3",
+    "pytest>=7.2,<8",
+    "requests>=2,<3",
+    "black>=24.3.0,<25",
+]
 
-[tool.poetry.group.dev.dependencies]
-icecream = "^2"
-pytest = "^7.2"
-requests = "^2"
-black = "^24.3.0"
-
-[build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
