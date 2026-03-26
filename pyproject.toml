@@ -3,7 +3,7 @@ name = "curlit"
 version = "0.1.0"
 description = "Curl your HTTP!"
 authors = [{ name = "Shiv Dhar", email = "shivdhar@gmail.com" }]
-requires-python = ">=3.9,<4"
+requires-python = ">=3.10,<4"
 license = "MIT"
 dependencies = ["pycurl>=7,<8"]
 
