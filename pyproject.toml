@@ -12,6 +12,6 @@ dev = [
     "icecream>=2,<3",
     "pytest>=7.2,<8",
     "requests>=2,<3",
-    "black>=24.3.0,<25",
+    "ruff>=0.15.7",
 ]
 
