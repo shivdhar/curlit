@@ -10,7 +10,7 @@ dependencies = ["pycurl>=7,<8"]
 [dependency-groups]
 dev = [
     "icecream>=2,<3",
-    "pytest>=7.2,<8",
+    "pytest>=9.0.3,<10",
     "requests>=2,<3",
     "ruff>=0.15.7",
 ]
